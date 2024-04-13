@@ -95,3 +95,24 @@ def get_most_appetizers_products():
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
     return jsonify(json_data)
+
+
+# Update appetizer
+@appetizers.route('/appetizers', methods=['PUT'])
+def update_appetizer():
+    data = request.json
+    
+    current_app.logger.info(data)
+    
+    if 'menuId' not in data or 'item_name' not in data or 'price' not in data or 'item_description' not in data:
+        return jsonify({'error': 'Missing required fields'}), 400
+    cursor = db.get_db().cursor()
+    cursor.execute('UPDATE appetizers SET id = %s, menuId = %s, item_name = %s, price = %s, item_description = %s WHERE id = %s',
+                   (data['id'], data['menuId'], data['item_name'], data['price'], data['item_description']))
+    db.get_db().commit()
+
+    cursor.execute('SELECT id, menuId, item_name, price, item_description FROM appetizers WHERE id = %s', data['id'])
+    row_headers = [x[0] for x in cursor.description]
+    updated_appetizers = dict(zip(row_headers, cursor.fetchone()))
+
+    return jsonify(updated_appetizers), 200     
