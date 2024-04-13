@@ -9,13 +9,14 @@ appetizers = Blueprint('appetizers', __name__)
 def get_appetizers():
     cursor = db.get_db().cursor()
     cursor.execute('SELECT id, menuId, item_name, price, item_description FROM appetizers')
-    column_headers = [x[0] for x in cursor.description]
+    column_headers = [x[0] for x in cursor.item_description]
     json_data = []
     theData = cursor.fetchall()
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
     return jsonify(json_data)
 
+# Get appetizers item description
 @appetizers.route('/appetizers/<id>', methods=['GET'])
 def get_appetizers_detail (id):
     query = 'SELECT id, menuId, item_name, price, item_description FROM appetizers WHERE id = ' + str(id)
@@ -29,6 +30,7 @@ def get_appetizers_detail (id):
         json_data.append(dict(zip(column_headers, row)))
     return jsonify(json_data)
 
+# get appetizers price
 @appetizers.route('/appetizers/<id>', methods=['GET'])
 def get_appetizers_price (id):
     query = 'SELECT id, menuId, item_name, price, item_description FROM appetizers WHERE id = ' + str(id)
@@ -42,6 +44,7 @@ def get_appetizers_price (id):
         json_data.append(dict(zip(column_headers, row)))
     return jsonify(json_data)
 
+# add appetizers
 @appetizers.route('/appetizers', methods=['POST'])
 def add_new_appetizers():
     the_data = request.json
@@ -59,21 +62,7 @@ def add_new_appetizers():
     db.get_db().commit()
     return 'Success!'
 
-@appetizers.route('/appetizers/<id>', methods=['GET'])
-def get_appetizers_detail (id):
-    query = 'SELECT id, menuId, item_name, price, item_description FROM appetizers WHERE id = ' + str(id)
-    current_app.logger.info(query)
-    cursor = db.get_db().cursor()
-    cursor.execute(query)
-    column_headers = [x[0] for x in cursor.description]
-    json_data = []
-    the_data = cursor.fetchall()
-    for row in the_data:
-        json_data.append(dict(zip(column_headers, row)))
-    return jsonify(json_data)   
-
-
-# get the top 5 products from the database
+# get the top 5 most expensive appetizers from the database
 @appetizers.route('/mostExpensive')
 def get_most_appetizers_products():
     cursor = db.get_db().cursor()
@@ -83,15 +72,26 @@ def get_most_appetizers_products():
         LIMIT 5
     '''
     cursor.execute(query)
-    # grab the column headers from the returned data
     column_headers = [x[0] for x in cursor.description]
-    # create an empty dictionary object to use in 
-    # putting column headers together with data
     json_data = []
-    # fetch all the data from the cursor
     theData = cursor.fetchall()
-    # for each of the rows, zip the data elements together with
-    # the column headers. 
+    for row in theData:
+        json_data.append(dict(zip(column_headers, row)))
+    return jsonify(json_data)
+
+# get the top 5 least expensive from the database
+@appetizers.route('/leastExpensive')
+def get_most_appetizers_products():
+    cursor = db.get_db().cursor()
+    query = '''
+        SELECT id, menuId, item_name, price, item_description FROM appetizers
+        ORDER BY list_price ASC
+        LIMIT 5
+    '''
+    cursor.execute(query)
+    column_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
     for row in theData:
         json_data.append(dict(zip(column_headers, row)))
     return jsonify(json_data)
