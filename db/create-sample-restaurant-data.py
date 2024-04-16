@@ -1,7 +1,9 @@
 from faker import Faker
+from faker_food import FoodProvider
 
 # Create Faker instance
 fake = Faker()
+fake.add_provider(FoodProvider)
 
 # Function to generate fake data for the customers table
 def generate_customers_inserts(num_inserts):
@@ -37,9 +39,9 @@ def generate_menu_inserts(num_inserts):
 def generate_item_inserts(table_name, num_inserts):
     inserts = []
     for _ in range(num_inserts):
-        item_name = fake.word()
+        item_name = fake.dish()
         price = fake.random_number(digits=2)
-        item_description = fake.sentence()
+        item_description = fake.dish_description()
         insert = f"INSERT INTO {table_name} (menuId, item_name, price, item_description) VALUES (1, '{item_name}', {price}, '{item_description}');"
         inserts.append(insert)
     return inserts
