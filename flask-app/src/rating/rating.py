@@ -67,3 +67,14 @@ def update_rating(ratingID):
                    (data['review'], data['num'], ratingID))
     db.get_db().commit()
     return jsonify({"message": "Rating updated successfully"}), 200
+
+# Delete a rating by its ID
+@ratings.route('/ratings/<int:ratingID>', methods=['DELETE'])
+def delete_rating(ratingID):
+    cursor = db.get_db().cursor()
+    cursor.execute('DELETE FROM rating WHERE id = %s', (ratingID,))
+    db.get_db().commit()
+    if cursor.rowcount > 0:
+        return jsonify({'message': 'Rating deleted successfully'}), 200
+    else:
+        return jsonify({'error': 'Rating not found'}), 404

@@ -54,7 +54,7 @@ def create_app():
     app.register_blueprint(desserts,   url_prefix='/d')
     app.register_blueprint(dietary_restrictions,   url_prefix='/d')
     app.register_blueprint(drinks,   url_prefix='/d')
-    app.register_blueprint(kidsmeal,   url_prefix='/k')
+    app.register_blueprint(kidsmeals,   url_prefix='/k')
     app.register_blueprint(location,   url_prefix='/l')
     app.register_blueprint(maincourse,   url_prefix='/m')
     app.register_blueprint(menu,   url_prefix='/m')

@@ -30,6 +30,20 @@ def get_dietary_restrictions_for_user(userID):
         json_data.append(dict(zip(column_headers, row)))
     return jsonify(json_data)
 
+# Get all dietary restrictions where nuts_bool is true
+@dietary_restrictions.route('/dietary_restrictions/nuts', methods=['GET'])
+def get_dietary_restrictions_with_nuts():
+    cursor = db.get_db().cursor()
+    cursor.execute('SELECT dietaryID, nuts_bool, vegetarian_bool, gluten_bool, eggs_bool, dairy_bool FROM dietary_restrictions WHERE nuts_bool = true')
+    column_headers = [x[0] for x in cursor.description]
+    dietary_data = cursor.fetchall()
+    if dietary_data:
+        dietary_list = [dict(zip(column_headers, row)) for row in dietary_data]
+        return jsonify(dietary_list)
+    else:
+        return jsonify({'message': 'No dietary restrictions with nuts found'}), 404
+
+
 # Add a new dietary restriction
 @dietary_restrictions.route('/dietary_restrictions', methods=['POST'])
 def add_dietary_restriction():
@@ -55,3 +69,14 @@ def update_dietary_restriction(dietaryID):
                    (data['nuts_bool'], data['vegetarian_bool'], data['gluten_bool'], data['eggs_bool'], data['dairy_bool'], dietaryID))
     db.get_db().commit()
     return jsonify({"message": "Dietary restriction updated successfully"}), 200
+
+# Delete a dietary restriction
+@dietary_restrictions.route('/dietary_restrictions/<int:dietaryID>', methods=['DELETE'])
+def delete_dietary_restriction(dietaryID):
+    cursor = db.get_db().cursor()
+    cursor.execute('DELETE FROM dietary_restrictions WHERE dietaryID = %s', (dietaryID,))
+    db.get_db().commit()
+    if cursor.rowcount > 0:
+        return jsonify({'message': 'Dietary restriction deleted successfully'}), 200
+    else:
+        return jsonify({'error': 'Dietary restriction not found'}), 404
