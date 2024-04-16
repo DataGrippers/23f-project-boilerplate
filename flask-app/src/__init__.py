@@ -39,13 +39,15 @@ def create_app():
     from src.desserts.desserts import desserts
     from src.dietaryrestrictions.dietaryrestrictions import dietary_restrictions
     from src.drinks.drinks import drinks
-    from src.kidsmeal.kidsmeal import kidsmeal
+    from src.kidsmeal.kidsmeal import kidsmeals
     from src.location.location import location
-    from src.maincourse.maincourse import maincourse
+    from src.maincourse.maincourse import maincourses
     from src.menu.menu import menu
-    from src.photo.photo import photo
+    from src.photo.photo import photos
     from src.rating.rating import ratings
     from src.restaurant.restaurant import restaurants
+    from src.users.users import users
+
 
     # Register the routes from each Blueprint with the app object
     # and give a url prefix to each
@@ -56,11 +58,12 @@ def create_app():
     app.register_blueprint(drinks,   url_prefix='/d')
     app.register_blueprint(kidsmeals,   url_prefix='/k')
     app.register_blueprint(location,   url_prefix='/l')
-    app.register_blueprint(maincourse,   url_prefix='/m')
+    app.register_blueprint(maincourses,   url_prefix='/m')
     app.register_blueprint(menu,   url_prefix='/m')
-    app.register_blueprint(photo,   url_prefix='/p')
+    app.register_blueprint(photos,   url_prefix='/p')
     app.register_blueprint(ratings,   url_prefix='/r')
     app.register_blueprint(restaurants,   url_prefix='/r')
+    app.register_blueprint(users,   url_prefix='/u')
 
 
 
