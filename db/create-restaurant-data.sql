@@ -341,16 +341,16 @@ INSERT INTO photo (name, caption) VALUES
 ('cremebrulee.jpg', 'Classic French dessert with caramelized sugar on top'),
 ('biryani.jpg', 'Spicy and flavorful Indian biryani rice dish');
 
-INSERT INTO user (username, password, student_bool, school_name, school_year, school_major, fName, lName, gender, age, budget, biography, locationID, photoID, dietaryID) VALUES
-('emily_wong', 'p@ssw0rd', true, 'LMN College', 2, 'Biology', 'Emily', 'Wong', 'Female', 21, 45, 'Adventurous eater and nature lover', 1, 4, 4),
-('michael_jones', 'mjones123', false, NULL, NULL, NULL, 'Michael', 'Jones', 'Male', 30, 70, 'Food blogger and chef', 2, 5, 5),
-('sara_garcia', 'ilovefood', true, 'PQR University', 4, 'Business', 'Sara', 'Garcia', 'Female', 24, 55, 'Always looking for the best restaurants in town', 3, 6, 6),
-('david_smith', 'password123', true, 'ABC University', 3, 'Engineering', 'David', 'Smith', 'Male', 22, 60, 'Tech enthusiast and foodie', 1, 7, 7),
-('jessica_brown', 'brownie', false, NULL, NULL, NULL, 'Jessica', 'Brown', 'Female', 28, 50, 'Passionate about travel and trying new cuisines', 2, 8, 8);
+INSERT INTO user (userID, username, password, student_bool, school_name, school_year, school_major, fName, lName, gender, age, budget, biography, locationID, photoID, dietaryID) VALUES
+(1,'emily_wong', 'p@ssw0rd', true, 'LMN College', 2, 'Biology', 'Emily', 'Wong', 'Female', 21, 45, 'Adventurous eater and nature lover', 1, 1, 1),
+(2,'michael_jones', 'mjones123', false, NULL, NULL, NULL, 'Michael', 'Jones', 'Male', 30, 70, 'Food blogger and chef', 2, 2, 2),
+(3,'sara_garcia', 'ilovefood', true, 'PQR University', 4, 'Business', 'Sara', 'Garcia', 'Female', 24, 55, 'Always looking for the best restaurants in town', 3, 3, 3),
+(4,'david_smith', 'password123', true, 'ABC University', 3, 'Engineering', 'David', 'Smith', 'Male', 22, 60, 'Tech enthusiast and foodie', 1, 4, 4),
+(5,'jessica_brown', 'brownie', false, NULL, NULL, NULL, 'Jessica', 'Brown', 'Female', 28, 50, 'Passionate about travel and trying new cuisines', 2, 5, 5);
 
-INSERT INTO rating (review, num, restaurantID, userID) VALUES
-('Amazing tacos and margaritas!', 5, 4, 4),
-('The Pad Thai was too spicy for my liking.', 3, 5, 5),
-('The hummus platter was delicious and fresh.', 4, 6, 6),
-('Wonderful French cuisine with impeccable service.', 5, 7, 7),
-('The biryani was flavorful and authentic.', 4, 8, 8);
+INSERT INTO rating (id, review, num, restaurantID, userID) VALUES
+(1, 'Amazing tacos and margaritas!', 5, 4, 1),
+(2, 'The Pad Thai was too spicy for my liking.', 3, 2, 2),
+(3, 'The hummus platter was delicious and fresh.', 4, 3, 3),
+(4, 'Wonderful French cuisine with impeccable service.', 1, 2, 4),
+(5, 'The biryani was flavorful and authentic.', 2, 2, 5);
