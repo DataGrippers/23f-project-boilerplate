@@ -8,8 +8,8 @@ maincourses = Blueprint('maincourses', __name__)
 @maincourses.route('/maincourses', methods=['GET'])
 def get_maincourses():
    cursor = db.get_db().cursor()
-   cursor.execute('SELECT id, menuId, item_name, price, item_description FROM maincourses')
-   column_headers = [x[0] for x in cursor.item_description]
+   cursor.execute('SELECT id, menuId, item_name, price, item_description FROM maincourse')
+   column_headers = [x[0] for x in cursor.description]
    json_data = []
    theData = cursor.fetchall()
    for row in theData:
@@ -20,11 +20,11 @@ def get_maincourses():
 # Get maincourses item description
 @maincourses.route('/maincourses/<id>', methods=['GET'])
 def get_maincourses_detail (id):
-   query = 'SELECT id, menuId, item_name, price, item_description FROM maincourses WHERE id = ' + str(id)
+   query = 'SELECT id, menuId, item_name, price, item_description FROM maincourse WHERE id = ' + str(id)
    current_app.logger.info(query)
    cursor = db.get_db().cursor()
    cursor.execute(query)
-   column_headers = [x[0] for x in cursor.item_description]
+   column_headers = [x[0] for x in cursor.description]
    json_data = []
    the_data = cursor.fetchall()
    for row in the_data:
@@ -35,7 +35,7 @@ def get_maincourses_detail (id):
 # get maincourses price
 @maincourses.route('/maincourses/<id>', methods=['GET'])
 def get_maincourses_price (id):
-   query = 'SELECT id, menuId, item_name, price, item_description FROM maincourses WHERE id = ' + str(id)
+   query = 'SELECT id, menuId, item_name, price, item_description FROM maincourse WHERE id = ' + str(id)
    current_app.logger.info(query)
    cursor = db.get_db().cursor()
    cursor.execute(query)
@@ -55,7 +55,7 @@ def add_new_maincourses():
    name = the_data['item_name']
    price = the_data['price']
    description = the_data['item_description']
-   query = 'insert into maincourses (product_name, description, category, list_price) values ("'
+   query = 'insert into maincourse (product_name, description, category, list_price) values ("'
    query += name + '", "'
    query += description + '", "'
    query += str(price) + ')'
@@ -71,7 +71,7 @@ def add_new_maincourses():
 def get_most_maincourses_products():
    cursor = db.get_db().cursor()
    query = '''
-       SELECT id, menuId, item_name, price, item_description FROM maincourses
+       SELECT id, menuId, item_name, price, item_description FROM maincourse
        ORDER BY list_price DESC
        LIMIT 5
    '''
@@ -86,10 +86,10 @@ def get_most_maincourses_products():
 
 # get the top 5 least expensive from the database
 @maincourses.route('/leastExpensive')
-def get_most_maincourses_products():
+def get_least_maincourses_products():
    cursor = db.get_db().cursor()
    query = '''
-       SELECT id, menuId, item_name, price, item_description FROM maincourses
+       SELECT id, menuId, item_name, price, item_description FROM maincourse
        ORDER BY list_price ASC
        LIMIT 5
    '''
@@ -112,10 +112,10 @@ def update_maincourse():
    if 'menuId' not in data or 'item_name' not in data or 'price' not in data or 'item_description' not in data:
        return jsonify({'error': 'Missing required fields'}), 400
    cursor = db.get_db().cursor()
-   cursor.execute('UPDATE maincourses SET id = %s, menuId = %s, item_name = %s, price = %s, item_description = %s WHERE id = %s',
+   cursor.execute('UPDATE maincourse SET id = %s, menuId = %s, item_name = %s, price = %s, item_description = %s WHERE id = %s',
                   (data['id'], data['menuId'], data['item_name'], data['price'], data['item_description']))
    db.get_db().commit()
-   cursor.execute('SELECT id, menuId, item_name, price, item_description FROM maincourses WHERE id = %s', data['id'])
+   cursor.execute('SELECT id, menuId, item_name, price, item_description FROM maincourse WHERE id = %s', data['id'])
    row_headers = [x[0] for x in cursor.description]
    updated_maincourses = dict(zip(row_headers, cursor.fetchone()))
    return jsonify(updated_maincourses), 200    

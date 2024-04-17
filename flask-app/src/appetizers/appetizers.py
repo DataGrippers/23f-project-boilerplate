@@ -9,7 +9,7 @@ appetizers = Blueprint('appetizers', __name__)
 def get_appetizers():
     cursor = db.get_db().cursor()
     cursor.execute('SELECT id, menuId, item_name, price, item_description FROM appetizers')
-    column_headers = [x[0] for x in cursor.item_description]
+    column_headers = [x[0] for x in cursor.description]
     json_data = []
     theData = cursor.fetchall()
     for row in theData:
@@ -23,7 +23,7 @@ def get_appetizers_detail (id):
     current_app.logger.info(query)
     cursor = db.get_db().cursor()
     cursor.execute(query)
-    column_headers = [x[0] for x in cursor.item_description]
+    column_headers = [x[0] for x in cursor.description]
     json_data = []
     the_data = cursor.fetchall()
     for row in the_data:
@@ -81,7 +81,7 @@ def get_most_appetizers_products():
 
 # get the top 5 least expensive from the database
 @appetizers.route('/leastExpensive')
-def get_most_appetizers_products():
+def get_least_appetizers_products():
     cursor = db.get_db().cursor()
     query = '''
         SELECT id, menuId, item_name, price, item_description FROM appetizers

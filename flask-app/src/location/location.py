@@ -8,7 +8,7 @@ location = Blueprint('location', __name__)
 
 # Get the number of restaurants in all locations
 @location.route('/location', methods=['GET'])
-def get_number():
+def get_all_restaurants():
     cursor = db.get_db().cursor()
     cursor.execute('SELECT num_restaurants FROM location')
     row_headers = [x[0] for x in cursor.description]
@@ -23,7 +23,7 @@ def get_number():
 
 # Get number of restaurants for particular location ID
 @location.route('/location/<location_id>', methods=['GET'])
-def get_number(location_id):
+def get_restaurants_based_location(location_id):
     cursor = db.get_db().cursor()
     cursor.execute('SELECT num_restaurants FROM location WHERE locationId = %s', (location_id,))
     row_headers = [x[0] for x in cursor.description]

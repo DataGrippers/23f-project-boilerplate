@@ -8,7 +8,7 @@ restaurants = Blueprint('restaurants', __name__)
 @restaurants.route('/restaurants', methods=['GET'])
 def get_restaurants():
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT restaurant_name, cuisine_type, atmosphere_type, avg_rating FROM restaurant')
+    cursor.execute('SELECT restaurantID, restaurant_name, cuisine_type, atmosphere_type, avg_rating, allergy_friendly_bool, on_campus_bool, delivery_bool, take_out_bool, distance_from_user, hours_of_operation, reservation_required_bool, peak_hours FROM restaurant')
     row_headers = [x[0] for x in cursor.description] 
     json_data = []
     theData = cursor.fetchall()
@@ -38,15 +38,34 @@ def get_restaurant(restaurantID):
     the_response.mimetype = 'application/json'
     return the_response
 
-# Create a new restaurant
 @restaurants.route('/restaurants', methods=['POST'])
 def create_restaurant():
-    data = request.get_json()
+    # Check if the request has the correct Content-Type and contains data
+    if not request.is_json:
+        return jsonify({"error": "Bad Request", "message": "Content-Type header is not set to 'application/json' or data is not present in the request"}), 400
+
+    # Attempt to get JSON data from the request or handle the decoding error
+    try:
+        data = request.get_json()
+    except Exception:
+        return jsonify({"error": "Bad Request", "message": "Failed to decode JSON object"}), 400
+
+    # Check if all required fields are present in the JSON data
+    required_fields = ['locationId', 'menuId', 'restaurant_name', 'cuisine_type', 'atmosphere_type',
+                       'on_campus_bool', 'allergy_friendly_bool', 'delivery_bool',
+                       'take_out_bool', 'distance_from_user', 'hours_of_operation',
+                       'reservation_required_bool', 'avg_rating', 'peak_hours']
+    
+    if not all(field in data for field in required_fields):
+        return jsonify({"error": "Bad Request", "message": "Missing one or more required fields"}), 400
+
+    # Proceed with the database insertion
     cursor = db.get_db().cursor()
-    cursor.execute('INSERT INTO restaurant (locationId, menuId, restaurant_name, cuisine_type, atmosphere_type, on_campus_bool, allergy_friendly_bool, present_wait_time, delivery_bool, take_out_bool, distance_from_user, hours_of_operation, reservation_required_bool, avg_rating, peak_hours) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', 
-                   (data['locationId'], data['menuId'], data['restaurant_name'], data['cuisine_type'], data['atmosphere_type'], data['on_campus_bool'], data['allergy_friendly_bool'], data['present_wait_time'], data['delivery_bool'], data['take_out_bool'], data['distance_from_user'], data['hours_of_operation'], data['reservation_required_bool'], data['avg_rating'], data['peak_hours']))
+    cursor.execute('INSERT INTO restaurant (locationId, menuId, restaurant_name, cuisine_type, atmosphere_type, on_campus_bool, allergy_friendly_bool, delivery_bool, take_out_bool, distance_from_user, hours_of_operation, reservation_required_bool, avg_rating, peak_hours) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', 
+                   (data['locationId'], data['menuId'], data['restaurant_name'], data['cuisine_type'], data['atmosphere_type'], data['on_campus_bool'], data['allergy_friendly_bool'], data['delivery_bool'], data['take_out_bool'], data['distance_from_user'], data['hours_of_operation'], data['reservation_required_bool'], data['avg_rating'], data['peak_hours']))
     db.get_db().commit()
     return jsonify({"message": "Restaurant created successfully"}), 201
+
 
 # Update an existing restaurant
 @restaurants.route('/restaurants/<restaurantID>', methods=['PUT'])
@@ -87,3 +106,26 @@ def get_restaurant_reviews(restaurantID):
     the_response.mimetype = 'application/json'
     return the_response
 
+# Get all the restaurants based on wait time 
+@restaurants.route('/restaurants/<int:restaurantID>/info', methods=['GET'])
+def get_restaurant_info(restaurantID):
+    cursor = db.get_db().cursor()
+    cursor.execute('SELECT restaurant_name, present_wait_time AS Average_Wait_Time, peak_hours FROM restaurant WHERE restaurantID = %s', (restaurantID,))
+    row_headers = [x[0] for x in cursor.description]
+    restaurant_data = cursor.fetchone()
+    if restaurant_data:
+        return jsonify(dict(zip(row_headers, restaurant_data)))
+    else:
+        return jsonify({"error": "Restaurant not found"}), 404
+    
+# Get all the menuIds from restaurants
+@restaurants.route('/menus', methods=['GET'])
+def get_menu_ids():
+    cursor = db.get_db().cursor()
+    cursor.execute('SELECT menuId FROM restaurant')  # Assuming menuId is the column name
+    fetched_data = cursor.fetchall()
+    menu_ids = [row[0] for row in fetched_data]
+    response_data = {"menuIds": menu_ids}
+    response = make_response(response_data, 200)
+    response.mimetype = 'application/json'
+    return response
