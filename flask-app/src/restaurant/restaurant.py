@@ -8,7 +8,7 @@ restaurants = Blueprint('restaurants', __name__)
 @restaurants.route('/restaurants', methods=['GET'])
 def get_restaurants():
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT restaurantID, restaurant_name, cuisine_type, atmosphere_type, avg_rating, allergy_friendly_bool, on_campus_bool, delivery_bool, take_out_bool, distance_from_user, hours_of_operation, reservation_required_bool, peak_hours FROM restaurant')
+    cursor.execute('SELECT restaurantID, menuId, restaurant_name, cuisine_type, atmosphere_type, avg_rating, allergy_friendly_bool, on_campus_bool, delivery_bool, take_out_bool, distance_from_user, hours_of_operation, reservation_required_bool, peak_hours FROM restaurant')
     row_headers = [x[0] for x in cursor.description] 
     json_data = []
     theData = cursor.fetchall()
@@ -61,7 +61,7 @@ def create_restaurant():
 
     # Proceed with the database insertion
     cursor = db.get_db().cursor()
-    cursor.execute('INSERT INTO restaurant (locationId, menuId, restaurant_name, cuisine_type, atmosphere_type, on_campus_bool, allergy_friendly_bool, delivery_bool, take_out_bool, distance_from_user, hours_of_operation, reservation_required_bool, avg_rating, peak_hours) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', 
+    cursor.execute('INSERT INTO restaurant (locationId, menuId, restaurant_name, cuisine_type, atmosphere_type, on_campus_bool, allergy_friendly_bool, delivery_bool, take_out_bool, distance_from_user, hours_of_operation, reservation_required_bool, avg_rating, peak_hours) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)', 
                    (data['locationId'], data['menuId'], data['restaurant_name'], data['cuisine_type'], data['atmosphere_type'], data['on_campus_bool'], data['allergy_friendly_bool'], data['delivery_bool'], data['take_out_bool'], data['distance_from_user'], data['hours_of_operation'], data['reservation_required_bool'], data['avg_rating'], data['peak_hours']))
     db.get_db().commit()
     return jsonify({"message": "Restaurant created successfully"}), 201
@@ -80,7 +80,7 @@ def update_restaurant(restaurantID):
     return jsonify({"message": "Restaurant updated successfully"}), 200
 
 # Delete a restaurant
-@restaurants.route('/restaurants/<restaurantID>', methods=['DELETE'])
+@restaurants.route('/restaurants/rere', methods=['DELETE'])
 def delete_restaurant(restaurantID):
     cursor = db.get_db().cursor()
     # Execute the delete operation
