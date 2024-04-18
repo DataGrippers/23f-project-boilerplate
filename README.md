@@ -1,4 +1,4 @@
-# Description of Hungry Hunt - Jamie Pan, Nathaniel Xie, Johnathan Liu, Annie Zhou, Henry Barrera
+# Description of Hungry Hunt - Jamie Pan, Nathaniel Xie, John Lee, Annie Zhou, Henry Barrera
 We created Hungry Hunt as an application to inspire users to share and learn more about restaurants in the area and how they can rate places and various dishes. Through HungryHunt, users can add and update user, restaurant, menu information, etc. Users can view information from the database. 
 
 
