@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS restaurant
  atmosphere_type varchar(75) NOT NULL,
  on_campus_bool bool NOT NULL,
  allergy_friendly_bool bool NOT NULL,
- present_wait_time time NOT NULL,
+ present_wait_time time default '00:00:00',
  delivery_bool bool NOT NULL,
  take_out_bool bool NOT NULL,
  distance_from_user float NOT NULL,

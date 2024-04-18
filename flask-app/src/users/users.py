@@ -71,3 +71,31 @@ def get_user_reviews(userID):
     for row in cursor.fetchall():
         json_data.append(dict(zip(row_headers, row)))
     return jsonify(json_data), 200
+
+# Get all users from the DB
+@users.route('/userdiet', methods=['GET'])
+def get_users_diet():
+    cursor = db.get_db().cursor()
+    cursor.execute('SELECT userID, username, dietaryID FROM user')
+    row_headers = [x[0] for x in cursor.description]
+    json_data = []
+    for row in cursor.fetchall():
+        json_data.append(dict(zip(row_headers, row)))
+    return jsonify(json_data), 200
+
+@users.route('/users/<int:user_id>/dietary-id', methods=['PUT'])
+def update_user_dietary_id(user_id):
+    data = request.get_json()
+    new_dietary_id = data.get('dietaryID')
+
+    if new_dietary_id is None:
+        return jsonify({"error": "dietaryID is required in the request body"}), 400
+
+    cursor = db.get_db().cursor()
+    cursor.execute('UPDATE users SET dietaryID = %s WHERE userID = %s', (new_dietary_id, user_id))
+    db.get_db().commit()
+
+    if cursor.rowcount == 0:
+        return jsonify({"error": "User not found"}), 404
+
+    return jsonify({"message": "Dietary ID updated successfully"}), 200
