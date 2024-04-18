@@ -71,7 +71,11 @@ def delete_location(location_id):
     return jsonify({'message': 'Location deleted successfully'}), 200
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 
+=======
+# Add a location
+>>>>>>> Stashed changes
 =======
 # Add a location
 >>>>>>> Stashed changes
@@ -106,5 +110,9 @@ def get_number_city(city_name):
     the_response = make_response(jsonify(json_data))
     the_response.status_code = 200
     the_response.mimetype = 'application/json'
+<<<<<<< Updated upstream
+    return the_response
+>>>>>>> Stashed changes
+=======
     return the_response
 >>>>>>> Stashed changes
