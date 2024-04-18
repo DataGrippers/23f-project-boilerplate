@@ -70,7 +70,11 @@ def delete_location(location_id):
     db.get_db().commit()
     return jsonify({'message': 'Location deleted successfully'}), 200
 
+<<<<<<< Updated upstream
 
+=======
+# Add a location
+>>>>>>> Stashed changes
 @location.route('/location', methods=['POST'])
 def add_location():
     data = request.get_json()
@@ -87,3 +91,20 @@ def add_location():
     return jsonify({'message': 'Location added successfully'}), 201
 
 
+<<<<<<< Updated upstream
+=======
+# Get number of restaurants for particular city name
+@location.route('/location/city/<city_name>', methods=['GET'])
+def get_number_city(city_name):
+    cursor = db.get_db().cursor()
+    cursor.execute('SELECT num_restaurants FROM location WHERE city_name = %s', (city_name,))
+    row_headers = [x[0] for x in cursor.description]
+    json_data = []
+    theData = cursor.fetchall()
+    for row in theData:
+        json_data.append(dict(zip(row_headers, row)))
+    the_response = make_response(jsonify(json_data))
+    the_response.status_code = 200
+    the_response.mimetype = 'application/json'
+    return the_response
+>>>>>>> Stashed changes
