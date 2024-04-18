@@ -72,15 +72,15 @@ def create_restaurant():
 def update_restaurant(restaurantID):
     data = request.get_json()
     cursor = db.get_db().cursor()
-    cursor.execute('UPDATE restaurant SET locationId=%s, menuId=%s, restaurant_name=%s, cuisine_type=%s, atmosphere_type=%s, on_campus_bool=%s, allergy_friendly_bool=%s, delivery_bool=%s, take_out_bool=%s, distance_from_user=%s, hours_of_operation=%s, reservation_required_bool=%s, avg_rating=%s, peak_hours=%s WHERE restaurantID=%s',
-                   (data['locationId'], data['menuId'], data['restaurant_name'], data['cuisine_type'], data['atmosphere_type'], data['on_campus_bool'], data['allergy_friendly_bool'], data['delivery_bool'], data['take_out_bool'], data['distance_from_user'], data['hours_of_operation'], data['reservation_required_bool'], data['avg_rating'], data['peak_hours'], restaurantID))
+    cursor.execute('UPDATE restaurant SET locationId=%s, menuId=%s, restaurant_name=%s, cuisine_type=%s, atmosphere_type=%s, on_campus_bool=%s, allergy_friendly_bool=%s, present_wait_time=%s, delivery_bool=%s, take_out_bool=%s, distance_from_user=%s, hours_of_operation=%s, reservation_required_bool=%s, avg_rating=%s, peak_hours=%s WHERE restaurantID=%s',
+                   (data['locationId'], data['menuId'], data['restaurant_name'], data['cuisine_type'], data['atmosphere_type'], data['on_campus_bool'], data['allergy_friendly_bool'], data['present_wait_time'], data['delivery_bool'], data['take_out_bool'], data['distance_from_user'], data['hours_of_operation'], data['reservation_required_bool'], data['avg_rating'], data['peak_hours'], restaurantID))
     db.get_db().commit()
     if cursor.rowcount == 0:
         return jsonify({"error": "Restaurant not found"}), 404
     return jsonify({"message": "Restaurant updated successfully"}), 200
 
 # Delete a restaurant
-@restaurants.route('/restaurants/<restaurantID>', methods=['DELETE'])
+@restaurants.route('/restaurants/rere', methods=['DELETE'])
 def delete_restaurant(restaurantID):
     cursor = db.get_db().cursor()
     # Execute the delete operation
@@ -106,6 +106,18 @@ def get_restaurant_reviews(restaurantID):
     the_response.mimetype = 'application/json'
     return the_response
 
+# Get all the restaurants based on wait time 
+@restaurants.route('/restaurants/<int:restaurantID>/info', methods=['GET'])
+def get_restaurant_info(restaurantID):
+    cursor = db.get_db().cursor()
+    cursor.execute('SELECT restaurant_name, present_wait_time AS Average_Wait_Time, peak_hours FROM restaurant WHERE restaurantID = %s', (restaurantID,))
+    row_headers = [x[0] for x in cursor.description]
+    restaurant_data = cursor.fetchone()
+    if restaurant_data:
+        return jsonify(dict(zip(row_headers, restaurant_data)))
+    else:
+        return jsonify({"error": "Restaurant not found"}), 404
+    
 # Get all the menuIds from restaurants
 @restaurants.route('/menus', methods=['GET'])
 def get_menu_ids():
