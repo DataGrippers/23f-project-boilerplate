@@ -1,3 +1,7 @@
+# Description of Hungry Hunt - Jamie Pan, Nathaniel Xie, Johnathan Liu, Annie Zhou, Henry Barrera
+We created Hungry Hunt as an application to inspire users to share and learn more about restaurants in the area and how they can rate places and various dishes. Through HungryHunt, users can add and update user, restaurant, menu information, etc. Users can view information from the database. 
+
+
 # MySQL + Flask Boilerplate Project
 
 This repo contains a boilerplate setup for spinning up 3 Docker containers: 
@@ -14,6 +18,7 @@ This repo contains a boilerplate setup for spinning up 3 Docker containers:
 1. In a terminal or command prompt, navigate to the folder with the `docker-compose.yml` file.  
 1. Build the images with `docker compose build`
 1. Start the containers with `docker compose up`.  To run in detached mode, run `docker compose up -d`. 
+
 
 
 
