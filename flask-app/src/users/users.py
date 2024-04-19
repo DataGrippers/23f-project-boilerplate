@@ -15,19 +15,21 @@ def get_users():
         json_data.append(dict(zip(row_headers, row)))
     return jsonify(json_data), 200
 
-# Get user details by userID
-@users.route('/users/<userID>', methods=['GET'])
-def get_user(userID):
+
+@users.route('/users/<username>', methods=['GET'])
+def get_user_details(username):
     cursor = db.get_db().cursor()
-    cursor.execute('SELECT * FROM user WHERE userID = %s', (userID,))
-    row_headers = [x[0] for x in cursor.description]
-    json_data = []
-    row = cursor.fetchone()
-    if row:
-        json_data = dict(zip(row_headers, row))
+    cursor.execute('SELECT * FROM user WHERE username = %s', (username,))
+    user = cursor.fetchone()
+    if user:
+        user_details = {
+            'username': user['username'],
+            'email': user['email'],  # assuming email is a field in your users table
+            # add other user details here as needed
+        }
+        return jsonify(user_details), 200
     else:
-        json_data = {"error": "User not found"}
-    return jsonify(json_data), 200
+        return jsonify({'error': 'User not found'}), 404
 
 # Create a new user
 @users.route('/users', methods=['POST'])
@@ -73,7 +75,7 @@ def get_user_reviews(userID):
     return jsonify(json_data), 200
 
 
-# Get all users from the DB
+# Get all users diet from the DB
 @users.route('/userdiet', methods=['GET'])
 def get_users_diet():
     cursor = db.get_db().cursor()
